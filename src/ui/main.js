@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 
 let observer = new Vue();
+
 new Vue({
   el: '#app',
   components: {
@@ -12,6 +13,6 @@ new Vue({
   }
 })
 
-setTimeout(()=>{
-  observer.$emit("event_name", "hello");
-}, 2000);
+// setTimeout(()=>{
+//   observer.$emit("event_name", "hello");
+// }, 2000);
