@@ -1,51 +1,63 @@
 <template>
   <section id="video-body">
-    <video ref="my-player" id="my-player" class="video-js pu-video">
-    </video>
+    <video ref="my-player" id="my-player" class="video-js pu-video vjs-sublime-skin"></video>
   </section>
 </template>
 
 <script>
 import videojs from "video.js";
-import {ipcRenderer} from "electron";
+import { ipcRenderer } from "electron";
 export default {
-  props: [
-    "options",
-    "sources"
-  ],
+  props: ["options", "sources"],
   data() {
     return {
-      player: null,
+      player: null
     };
   },
 
   mounted() {
-    this.player = videojs(this.$refs["my-player"], this.options, function() {
-    });
+    this.player = videojs(this.$refs["my-player"], this.options, function() {});
 
-    setTimeout(() => {
-       this.player.src(this.sources[0]);
-    }, 2000);
-    setTimeout(() => {
-       this.player.src(this.sources[1]);
-    }, 4000);
-    setTimeout(() => {
-       this.player.src(this.sources[2]);
-    }, 6000);
-    setTimeout(() => {
-       this.player.src(this.sources[3]);
-    }, 8000);
+    if (this.player.readyState() < 1) {
+      // do not have metadata yet so loadedmetadata event not fired yet (I presume)
+      // wait for loadedmetdata event
+      this.player.on("loadedmetadata", function(){
+        console.log(this.duration())
+      });
+    }
   },
 
   beforeDestroy() {
     if (this.player) {
       this.player.dispose();
     }
-  }, 
-  created(){
-    ipcRenderer.on("/video", (event, args)=>{
-      this.player.src(this.sources[args["idx"]]);
-    }); 
+  },
+  created() {
+    ipcRenderer.on("/video", (event, args) => {
+      let title = args["title"];
+      let idx = -1;
+      if(title === "apple carplay") {idx = 0;}
+      else if(title === "google android auto") idx = 1;
+      else if(title === "volvo_IVI system") idx = 2;
+      else if(title === "samsung_IVI system") idx = 3;
+
+      this.player.src(this.sources[idx]);
+    });
+
+    ipcRenderer.on("/play", (event, args) => {
+      this.player.play();
+    });
+    ipcRenderer.on("/pause", (event, args) => {
+      this.player.pause();
+    });
+    ipcRenderer.on("/seek", (event, args) => {
+      this.player.currentTime(args["seek"]);
+    });
+    ipcRenderer.on("/cancel", (event, args) => {
+      this.player.currentTime(0)
+      this.player.reset()
+      this.player.init(this.$refs["my-player"]);
+    });
   }
 };
 </script>
@@ -65,9 +77,9 @@ export default {
   width: 90%;
   height: 90%;
 }
-/* .video-js .vjs-picture-in-picture-control {
+.video-js .vjs-picture-in-picture-control {
   display: none;
-} */
+}
 .video-js {
   font-size: 10px;
   color: #fff;
@@ -81,8 +93,8 @@ export default {
   border-radius: 0.3em;
   left: 50%;
   top: 50%;
-  margin-left: -1.5em;
-  margin-top: -0.75em;
+  position:fixed;
+  transform: translate(-50%,-50%);
 }
 .video-js .vjs-control-bar,
 .video-js .vjs-big-play-button,
