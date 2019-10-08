@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // Modules to control application life and create native browser window
 const electron_1 = require("electron");
+const HttpController_1 = __importDefault(require("./core/HttpController"));
+require("./core/express/bin/www");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -14,7 +19,7 @@ function createWindow() {
             nodeIntegration: true
         }
     });
-    mainWindow.setMenuBarVisibility(true);
+    mainWindow.setMenuBarVisibility(false);
     // and load the index.html of the app.
     mainWindow.loadFile('ui/index.html');
     // Open the DevTools.
@@ -26,6 +31,7 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null;
     });
+    HttpController_1.default().pushBrowser(mainWindow);
 }
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

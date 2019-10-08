@@ -1,32 +1,21 @@
 <template>
   <section id="video-body">
-    <video ref="my-player" id="my-player" class="video-js pu-video vjs-sublime-skin">
+    <video ref="my-player" id="my-player" class="video-js pu-video">
     </video>
   </section>
 </template>
 
 <script>
 import videojs from "video.js";
-
+import {ipcRenderer} from "electron";
 export default {
-  props: {
-    options: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
-  },
+  props: [
+    "options",
+    "sources"
+  ],
   data() {
     return {
       player: null,
-      sources: [
-        {
-          src: "./page/video/assets/ccis.master 2019-09-22 18-06-14.mp4",
-          type: "video/mp4"
-        },
-        { src: "./page/video/assets/test.mp4", type: "video/mp4" }
-      ],
     };
   },
 
@@ -41,10 +30,10 @@ export default {
        this.player.src(this.sources[1]);
     }, 4000);
     setTimeout(() => {
-       this.player.src(this.sources[0]);
+       this.player.src(this.sources[2]);
     }, 6000);
     setTimeout(() => {
-       this.player.src(this.sources[1]);
+       this.player.src(this.sources[3]);
     }, 8000);
   },
 
@@ -52,9 +41,17 @@ export default {
     if (this.player) {
       this.player.dispose();
     }
+  }, 
+  created(){
+    ipcRenderer.on("/video", (event, args)=>{
+      this.player.src(this.sources[args["idx"]]);
+    }); 
   }
 };
 </script>
+
+
+
 <style>
 #video-body {
   width: 100%;
@@ -68,9 +65,9 @@ export default {
   width: 90%;
   height: 90%;
 }
-.video-js .vjs-picture-in-picture-control {
+/* .video-js .vjs-picture-in-picture-control {
   display: none;
-}
+} */
 .video-js {
   font-size: 10px;
   color: #fff;

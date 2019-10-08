@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow} from "electron";
-
+import Controller from "./core/HttpController"
+import "./core/express/bin/www";
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow : BrowserWindow | null;
@@ -14,7 +15,7 @@ function createWindow() {
             nodeIntegration: true
         }
     });
-    mainWindow.setMenuBarVisibility(true);
+    mainWindow.setMenuBarVisibility(false);
 
     // and load the index.html of the app.
     mainWindow.loadFile('ui/index.html');
@@ -29,6 +30,8 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     });
+
+    Controller().pushBrowser(mainWindow);
 }
 
 // This method will be called when Electron has finished
