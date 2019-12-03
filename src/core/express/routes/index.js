@@ -29,4 +29,16 @@ router.put('/cancel', function (req, res, next) {
     HttpController_1.default().getBrowser(0).webContents.send("/cancel");
     res.send("OK");
 });
+let state = "/loading";
+router.get('/update', function (req, res, next) {
+    res.send({ state: state });
+});
+router.put('/update', function (req, res, next) {
+    console.log(req.body["path"]);
+    if (state !== req.body["path"]) {
+        state = req.body["path"];
+        HttpController_1.default().getBrowser(0).webContents.send("/route", state);
+    }
+    res.send("OK");
+});
 module.exports = router;

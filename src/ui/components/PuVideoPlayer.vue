@@ -14,7 +14,6 @@ export default {
       player: null
     };
   },
-
   mounted() {
     this.player = videojs(this.$refs["my-player"], this.options, function() {});
 
@@ -23,6 +22,7 @@ export default {
       // wait for loadedmetdata event
       this.player.on("loadedmetadata", function(){
         console.log(this.duration())
+        this.player.src(this.sources[0]);
       });
     }
   },
@@ -61,8 +61,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style>
 #video-body {

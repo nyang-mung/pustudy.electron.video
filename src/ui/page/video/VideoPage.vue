@@ -1,5 +1,8 @@
 <template>
-  <pu-video-player v-bind:options="videoOptions" v-bind:sources="sources" />
+  <pu-video-player 
+    v-bind:observer="observer"
+    v-bind:options="videoOptions"
+    v-bind:sources="sources" />
 </template>
 
 <script>
@@ -23,6 +26,9 @@ export default {
   components: {
     PuVideoPlayer
   },
+  props : [
+    "observer"
+  ]
 };
 
 

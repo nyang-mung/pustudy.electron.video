@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
+import Observer from "./Observer";
+import VueRouter from "vue-router";
 
-let observer = new Vue();
+Vue.use(VueRouter);
 
+let observer = new Observer();
 new Vue({
   el: '#app',
   components: {
