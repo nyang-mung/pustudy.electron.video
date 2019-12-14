@@ -12,7 +12,7 @@ export default {
     return {
       videoOptions: {
         autoplay: true,
-        muted: false,
+        muted: true,
         controls: true
       },
       sources: [

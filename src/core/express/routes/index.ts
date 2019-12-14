@@ -42,6 +42,7 @@ router.put('/update', function (req, res, next) {
     console.log(req.body["path"]);
     if(state !== req.body["path"]){
         state = req.body["path"];
+        
         Controller().getBrowser(0).webContents.send("/route", state);
     }
     

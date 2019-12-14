@@ -22,14 +22,13 @@ export default {
       // wait for loadedmetdata event
       this.player.on("loadedmetadata", function(){
         console.log(this.duration())
-        this.player.src(this.sources[0]);
       });
     }
   },
 
   beforeDestroy() {
     if (this.player) {
-      this.player.dispose();
+      this.player.reset();
     }
   },
   created() {
@@ -56,7 +55,7 @@ export default {
     ipcRenderer.on("/cancel", (event, args) => {
       this.player.currentTime(0)
       this.player.reset()
-      this.player.init(this.$refs["my-player"]);
+      //this.player.init(this.$refs["my-player"]);
     });
   }
 };
